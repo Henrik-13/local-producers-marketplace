@@ -6,6 +6,7 @@ import edu.bbte.localproducersmarketplace.model.Role;
 import edu.bbte.localproducersmarketplace.model.User;
 import edu.bbte.localproducersmarketplace.service.AuthService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
+@Slf4j
 public class AuthController {
 
     @Autowired
@@ -23,6 +25,7 @@ public class AuthController {
     @PostMapping("/login")
     public ResponseEntity<String> login(@RequestBody @Valid LoginDto loginDto) {
         String token = authService.login(loginDto.getEmail(), loginDto.getPassword());
+        log.info("User logged in: {}", loginDto.getEmail());
         return ResponseEntity.ok(token);
     }
 
@@ -39,6 +42,7 @@ public class AuthController {
         }
 
         authService.register(user);
+        log.info("User registered: {}", registerDto.getEmail());
         return ResponseEntity.ok("User registered successfully");
     }
 }

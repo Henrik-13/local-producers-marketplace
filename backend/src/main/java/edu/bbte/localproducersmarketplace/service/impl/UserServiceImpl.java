@@ -1,24 +1,30 @@
 package edu.bbte.localproducersmarketplace.service.impl;
 
 import edu.bbte.localproducersmarketplace.model.User;
+import edu.bbte.localproducersmarketplace.repository.UserRepository;
 import edu.bbte.localproducersmarketplace.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.List;
 
+@Service
 public class UserServiceImpl implements UserService {
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public User findById(Long id) {
-        return null;
+        return userRepository.findById(id).orElse(null);
     }
 
     @Override
-    public User deleteById(Long id) {
-        return null;
+    public void deleteById(Long id) {
+        userRepository.deleteById(id);
     }
 
     @Override
     public Collection<User> findAll() {
-        return List.of();
+        return userRepository.findAll();
     }
 }

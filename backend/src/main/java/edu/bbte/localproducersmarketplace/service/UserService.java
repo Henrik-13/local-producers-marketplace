@@ -7,7 +7,7 @@ import java.util.Collection;
 public interface UserService {
     User findById(Long id);
 
-    User deleteById(Long id);
+    void deleteById(Long id);
 
     Collection<User> findAll();
 }
