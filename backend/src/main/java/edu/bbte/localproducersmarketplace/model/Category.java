@@ -1,11 +1,11 @@
 package edu.bbte.localproducersmarketplace.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+
+import java.util.List;
 
 @Entity
 @Table(name = "Categories")
@@ -15,4 +15,6 @@ import lombok.ToString;
 public class Category extends BaseEntity {
     @Column(nullable = false, unique = true, length = 50)
     private String name;
+    @OneToMany(mappedBy = "category", cascade = CascadeType.ALL)
+    List<Product> products;
 }

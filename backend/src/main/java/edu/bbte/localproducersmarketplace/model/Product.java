@@ -19,12 +19,12 @@ public class Product extends BaseEntity {
     @Column(nullable = false, length = 500)
     private String description;
     @Column(nullable = false)
-    private double price;
+    private Double price;
     @Column(nullable = false)
-    private int quantity;
-    @JoinColumn(nullable = false)
+    private Integer quantity;
     @ManyToOne
+    @JoinColumn(nullable = false)
     private Category category;
-    @ElementCollection
-    private List<String> imageUrls = new ArrayList<>();
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Image> images = new ArrayList<>();
 }
