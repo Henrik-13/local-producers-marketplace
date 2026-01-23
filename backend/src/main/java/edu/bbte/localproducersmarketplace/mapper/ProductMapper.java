@@ -30,7 +30,7 @@ public interface ProductMapper {
     default List<String> mapImagesToUrls(List<Image> images) {
         if (images == null) return List.of();
         return images.stream()
-                .map(Image::getUrl)
+                .map(Image::getName)
                 .toList();
     }
 }

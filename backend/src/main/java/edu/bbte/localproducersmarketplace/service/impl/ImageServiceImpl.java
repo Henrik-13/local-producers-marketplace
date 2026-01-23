@@ -1,10 +1,12 @@
 package edu.bbte.localproducersmarketplace.service.impl;
 
-import edu.bbte.localproducersmarketplace.exception.exceptions.ImageCouldNotBeCreatedException;
+import edu.bbte.localproducersmarketplace.exception.ImageRepositoryException;
+import edu.bbte.localproducersmarketplace.exception.ImageServiceException;
 import edu.bbte.localproducersmarketplace.model.Image;
 import edu.bbte.localproducersmarketplace.repository.ImageRepository;
-import edu.bbte.localproducersmarketplace.repository.MinioImageDao;
+import edu.bbte.localproducersmarketplace.repository.MinioImageRepository;
 import edu.bbte.localproducersmarketplace.service.ImageService;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -15,9 +17,9 @@ import java.util.Optional;
 public class ImageServiceImpl implements ImageService {
 
     private final ImageRepository imageRepository;
-    private final MinioImageDao imageDao;
+    private final MinioImageRepository imageDao;
 
-    public ImageServiceImpl(ImageRepository imageRepository, MinioImageDao imageDao) {
+    public ImageServiceImpl(ImageRepository imageRepository, MinioImageRepository imageDao) {
         this.imageRepository = imageRepository;
         this.imageDao = imageDao;
     }
@@ -28,14 +30,14 @@ public class ImageServiceImpl implements ImageService {
     }
 
     @Override
-    public Image create(Image image, MultipartFile file, String fileName) {
+    public Image save(Image image, MultipartFile file, String fileName) {
         String imageUrl;
         try {
-            imageUrl = imageDao.create(fileName, file.getInputStream(), file.getSize());
-        } catch (IOException e) {
-            throw new ImageCouldNotBeCreatedException();
+            imageUrl = imageDao.save(file, fileName);
+        } catch (ImageRepositoryException e) {
+            throw new ImageServiceException("Image could not be saved", e);
         }
-        image.setPath(imageUrl);
+        image.setName(imageUrl);
         return imageRepository.saveAndFlush(image);
     }
 
@@ -47,7 +49,12 @@ public class ImageServiceImpl implements ImageService {
     @Override
     public void deleteById(Long id) {
         Optional<Image> img = imageRepository.findById(id);
-        img.ifPresent(image -> imageDao.delete(image.getPath().substring(image.getPath().lastIndexOf('/') + 1)));
+        img.ifPresent(image -> imageDao.delete(image.getName()));
         imageRepository.deleteById(id);
+    }
+
+    @Override
+    public Resource download(String path) {
+        return imageDao.getImage(path);
     }
 }

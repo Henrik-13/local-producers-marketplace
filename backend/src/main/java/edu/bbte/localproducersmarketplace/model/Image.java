@@ -11,8 +11,6 @@ import lombok.Setter;
 public class Image extends BaseEntity {
     @Column(nullable = false, length = 100)
     private String name;
-    @Column(nullable = false, length = 100)
-    private String path;
     @ManyToOne
     @JoinColumn(nullable = false)
     private Product product;

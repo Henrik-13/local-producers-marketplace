@@ -6,7 +6,10 @@ import io.minio.errors.MinioException;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -16,7 +19,7 @@ import java.util.Date;
 
 @Repository
 @RequiredArgsConstructor
-public class MinioImageDao {
+public class MinioImageRepository {
     private final MinioClient minioClient;
     @Value("${minio.bucket}")
     private String bucketName;
@@ -35,39 +38,44 @@ public class MinioImageDao {
     }
 
     /**
-     * @param imageName Name of the file, with extension
-     * @param inputStream InputStream from the file
-     * @param size Size of the file
-     * @return Saved image's URL
+     * @param filename Name of the saved image, with extension
+     * @return Saved image Resource
      */
-    public String create(String imageName, InputStream inputStream, long size) {
-        String fileExtension = imageName.strip().substring(imageName.lastIndexOf('.') + 1).toLowerCase();
+    public Resource getImage(final String filename) {
         try {
-            String newImageName = new Date().getTime() + "." + fileExtension;
-            minioClient.putObject(PutObjectArgs.builder()
-                    .bucket(bucketName)
-                    .object(newImageName)
-                    .stream(inputStream, size, -1)
-                    .contentType(getContentTypeFromFileName(fileExtension))
-                    .build());
-            return minioUrl + "/" + bucketName + "/" + newImageName;
+            InputStream inputStream =
+                    minioClient.getObject(
+                            GetObjectArgs.builder()
+                                    .bucket(bucketName)
+                                    .object(filename)
+                                    .build());
+            return new InputStreamResource(inputStream);
         } catch (InvalidKeyException | IOException | NoSuchAlgorithmException | MinioException e) {
-            throw new ImageRepositoryException("Image could not be created", e);
+            throw new ImageRepositoryException("Image could not be found", e);
         }
     }
 
-    private String getContentTypeFromFileName(String fileExtension) {
-        return switch (fileExtension) {
-            case "jpe", "jpg", "jpeg" -> "image/jpeg";
-            case "png" -> "image/png";
-            case "gif" -> "image/gif";
-            case "bmp" -> "image/bmp";
-            case "webp" -> "image/webp";
-            case "tif", "tiff" -> "image/tiff";
-            default -> "application/octet-stream";  // Fallback for unknown types
-        };
+    /**
+     * @param img Image resource as MultipartFile
+     * @param imageName Image name
+     * @return Saved image's path
+     */
+    public String save(MultipartFile img, String imageName) {
+        String fileExtension = imageName.strip().substring(imageName.lastIndexOf('.') + 1).toLowerCase();
+        try {
+            String newImageName = new Date().getTime() + "." + fileExtension;
+            minioClient.putObject(
+                    PutObjectArgs.builder()
+                            .bucket(bucketName)
+                            .object(newImageName)
+                            .stream(img.getInputStream(), img.getSize(), -1)
+                            .contentType(img.getContentType())
+                            .build());
+            return newImageName;
+        } catch (InvalidKeyException | IOException | NoSuchAlgorithmException | MinioException e) {
+            throw new ImageRepositoryException("Image could not be saved", e);
+        }
     }
-
     public void delete(String imageName) {
         try {
             minioClient.removeObject(RemoveObjectArgs.builder()
