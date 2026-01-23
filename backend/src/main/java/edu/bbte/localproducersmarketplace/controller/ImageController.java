@@ -66,5 +66,17 @@ public class ImageController {
         }
     }
 
-
+    @DeleteMapping(path = "/{id}")
+    public ResponseEntity<Object> deleteImage(@PathVariable Long id) {
+        Optional<Image> image = imageService.findById(id);
+        if (image.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        try {
+            imageService.deleteById(id);
+            return ResponseEntity.noContent().build();
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 }
