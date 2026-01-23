@@ -1,12 +1,10 @@
 package edu.bbte.localproducersmarketplace.controller;
 
-import edu.bbte.localproducersmarketplace.dto.in.ImageInDto;
 import edu.bbte.localproducersmarketplace.model.Image;
 import edu.bbte.localproducersmarketplace.service.ImageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
