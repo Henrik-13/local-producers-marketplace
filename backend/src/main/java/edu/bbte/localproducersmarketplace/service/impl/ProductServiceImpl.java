@@ -26,13 +26,14 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product create(Product product) {
+        product.setQuantity(0);
         return repo.saveAndFlush(product);
     }
 
     @Transactional(readOnly = true)
     @Override
     public Product findById(Long id) {
-        return repo.findById(id).orElseThrow();
+        return repo.findWithImagesById(id).orElseThrow();
     }
 
     @Transactional(readOnly = true)

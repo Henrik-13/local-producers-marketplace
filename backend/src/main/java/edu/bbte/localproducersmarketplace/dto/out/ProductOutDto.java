@@ -1,16 +1,17 @@
 package edu.bbte.localproducersmarketplace.dto.out;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
 @Getter
+@Setter
 public class ProductOutDto {
     public Long id;
     public String name;
     public String description;
     public Double price;
     public Integer quantity;
-    public Long categoryId;
-    public String categoryName;
-    public List<String> imageUrls;
+    public CategoryOutDto category;
+    public List<ImageOutDto> images;
 }

@@ -1,5 +1,6 @@
 package edu.bbte.localproducersmarketplace.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -13,5 +14,6 @@ public class Image extends BaseEntity {
     private String name;
     @ManyToOne
     @JoinColumn(nullable = false)
+    @JsonIgnore
     private Product product;
 }

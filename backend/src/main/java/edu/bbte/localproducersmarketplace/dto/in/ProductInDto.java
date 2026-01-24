@@ -15,6 +15,6 @@ public class ProductInDto {
     @DecimalMin(value = "0.0", inclusive = false)
     private Double price;
 
-    @NotBlank
+    @NotNull
     private Long categoryId;
 }

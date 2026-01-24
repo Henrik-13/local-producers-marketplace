@@ -43,11 +43,12 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public ResponseEntity<ProductOutDto> getOne(@PathVariable Long id) {
+        System.out.println(service.findById(id));
         return ResponseEntity.ok(mapper.toDto(service.findById(id)));
     }
 
 
-    @GetMapping("/products")
+    @GetMapping
     public PageResponse<ProductOutDto> getProducts(
             @RequestParam(required = false) String name,
             @RequestParam(required = false) Long categoryId,

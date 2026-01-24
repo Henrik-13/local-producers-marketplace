@@ -8,11 +8,8 @@ import org.mapstruct.*;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", nullValueMappingStrategy = NullValueMappingStrategy.RETURN_DEFAULT)
 public interface ProductMapper {
-    @Mapping(source = "category.id",   target = "categoryId")
-    @Mapping(source = "category.name", target = "categoryName")
-    @Mapping(source = "images", target = "imageUrls")
     ProductOutDto toDto(Product product);
 
     List<ProductOutDto> toDtoList(List<Product> products);
