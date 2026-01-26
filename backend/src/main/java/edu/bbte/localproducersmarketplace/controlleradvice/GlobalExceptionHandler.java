@@ -1,6 +1,7 @@
 package edu.bbte.localproducersmarketplace.controlleradvice;
 
 import edu.bbte.localproducersmarketplace.dto.ErrorResponse;
+import edu.bbte.localproducersmarketplace.exception.CartNotFoundException;
 import edu.bbte.localproducersmarketplace.exception.OrderFinalizedException;
 import edu.bbte.localproducersmarketplace.exception.OrderNotFoundException;
 import edu.bbte.localproducersmarketplace.exception.ProductNotFoundException;
@@ -11,9 +12,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
-import tools.jackson.databind.exc.InvalidFormatException;
 
 import java.util.stream.Stream;
+import tools.jackson.databind.exc.InvalidFormatException;
 
 @ControllerAdvice
 @Slf4j
@@ -48,8 +49,8 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ProductNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     @ResponseBody
-    public ErrorResponse handleOrderNotFound(ProductNotFoundException ex) {
-        log.error("Prodcut not found: ", ex);
+    public ErrorResponse handleProductNotFound(ProductNotFoundException ex) {
+        log.error("Product not found: ", ex);
         return new ErrorResponse("Product not found", ex.getMessage());
     }
 
@@ -59,6 +60,14 @@ public class GlobalExceptionHandler {
     public ErrorResponse handleUserNotFound(UserNotFoundException ex) {
         log.error("UserNotFoundException: ", ex);
         return new ErrorResponse("User not found", ex.getMessage());
+    }
+
+    @ExceptionHandler(CartNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseBody
+    public ErrorResponse handleCartNotFound(CartNotFoundException ex) {
+        log.error("CartNotFoundException: ", ex);
+        return new ErrorResponse("Cart not found", ex.getMessage());
     }
 
     @ExceptionHandler(OrderFinalizedException.class)
@@ -93,3 +102,4 @@ public class GlobalExceptionHandler {
         return new ErrorResponse("Internal server error", ex.getMessage());
     }
 }
+
