@@ -1,4 +1,4 @@
-package edu.bbte.localproducersmarketplace.controller.mapper;
+package edu.bbte.localproducersmarketplace.mapper;
 
 import edu.bbte.localproducersmarketplace.dto.out.UserOutDto;
 import edu.bbte.localproducersmarketplace.model.User;

@@ -1,6 +1,6 @@
 package edu.bbte.localproducersmarketplace.controller;
 
-import edu.bbte.localproducersmarketplace.controller.mapper.UserMapper;
+import edu.bbte.localproducersmarketplace.mapper.UserMapper;
 import edu.bbte.localproducersmarketplace.dto.out.UserOutDto;
 import edu.bbte.localproducersmarketplace.service.UserService;
 import lombok.extern.slf4j.Slf4j;
