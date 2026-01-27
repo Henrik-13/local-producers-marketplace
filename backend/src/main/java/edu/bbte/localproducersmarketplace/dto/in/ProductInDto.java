@@ -15,6 +15,10 @@ public class ProductInDto {
     @DecimalMin(value = "0.0", inclusive = false)
     private Double price;
 
+    @NotNull(message = "Quantity/Stock is mandatory")
+    @Min(value = 0, message = "Quantity must be 0 or greater")
+    private Integer quantity;
+
     @NotNull
     private Long categoryId;
 }

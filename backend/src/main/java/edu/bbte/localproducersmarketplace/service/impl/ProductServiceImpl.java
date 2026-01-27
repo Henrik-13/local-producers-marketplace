@@ -26,7 +26,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public Product create(Product product) {
-        product.setQuantity(0);
+        // Quantity is set from the DTO, no need to override
         return repo.saveAndFlush(product);
     }
 
@@ -59,7 +59,9 @@ public class ProductServiceImpl implements ProductService {
         existing.setName(product.getName());
         existing.setDescription(product.getDescription());
         existing.setPrice(product.getPrice());
+        existing.setQuantity(product.getQuantity());
         existing.setCategory(product.getCategory());
+        // Don't update producer - it should remain the same
         return repo.saveAndFlush(existing);
     }
 

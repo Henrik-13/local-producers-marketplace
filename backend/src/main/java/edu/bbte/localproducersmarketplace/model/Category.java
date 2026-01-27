@@ -12,7 +12,7 @@ import java.util.List;
 @Table(name = "Categories")
 @Getter
 @Setter
-@ToString(callSuper = true)
+@ToString(callSuper = true, exclude = {"products"})
 public class Category extends BaseEntity {
     @Column(nullable = false, unique = true, length = 50)
     private String name;

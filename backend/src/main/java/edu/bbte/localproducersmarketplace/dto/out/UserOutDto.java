@@ -1,5 +1,6 @@
 package edu.bbte.localproducersmarketplace.dto.out;
 
+import edu.bbte.localproducersmarketplace.model.Role;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -11,4 +12,6 @@ public class UserOutDto {
     private String email;
 
     private String name;
+
+    private Role role;
 }

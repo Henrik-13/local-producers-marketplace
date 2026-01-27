@@ -1,0 +1,343 @@
+{
+  "testCases": [
+    {
+      "name": "Create cart - valid request",
+      "endpoint": "POST /api/carts/{userId}",
+      "userId": 1,
+      "request": {
+        "items": [
+          {
+            "productId": 1,
+            "quantity": 2,
+            "unitPrice": 15.99
+          },
+          {
+            "productId": 2,
+            "quantity": 1,
+            "unitPrice": 25.50
+          }
+        ]
+      },
+      "expectedStatus": 200,
+      "description": "Create a new cart with multiple items for a user"
+    },
+    {
+      "name": "Create cart - single item",
+      "endpoint": "POST /api/carts/{userId}",
+      "userId": 2,
+      "request": {
+        "items": [
+          {
+            "productId": 3,
+            "quantity": 5,
+            "unitPrice": 10.00
+          }
+        ]
+      },
+      "expectedStatus": 200,
+      "description": "Create a cart with a single item"
+    },
+    {
+      "name": "Create cart - invalid empty items",
+      "endpoint": "POST /api/carts/{userId}",
+      "userId": 1,
+      "request": {
+        "items": []
+      },
+      "expectedStatus": 400,
+      "description": "Should fail validation when items array is empty"
+    },
+    {
+      "name": "Create cart - invalid null quantity",
+      "endpoint": "POST /api/carts/{userId}",
+      "userId": 1,
+      "request": {
+        "items": [
+          {
+            "productId": 1,
+            "quantity": null,
+            "unitPrice": 15.99
+          }
+        ]
+      },
+      "expectedStatus": 400,
+      "description": "Should fail validation when quantity is null"
+    },
+    {
+      "name": "Create cart - invalid zero quantity",
+      "endpoint": "POST /api/carts/{userId}",
+      "userId": 1,
+      "request": {
+        "items": [
+          {
+            "productId": 1,
+            "quantity": 0,
+            "unitPrice": 15.99
+          }
+        ]
+      },
+      "expectedStatus": 400,
+      "description": "Should fail validation when quantity is less than 1"
+    },
+    {
+      "name": "Create cart - invalid negative unit price",
+      "endpoint": "POST /api/carts/{userId}",
+      "userId": 1,
+      "request": {
+        "items": [
+          {
+            "productId": 1,
+            "quantity": 2,
+            "unitPrice": -5.00
+          }
+        ]
+      },
+      "expectedStatus": 400,
+      "description": "Should fail validation when unit price is negative"
+    },
+    {
+      "name": "Create cart - invalid null productId",
+      "endpoint": "POST /api/carts/{userId}",
+      "userId": 1,
+      "request": {
+        "items": [
+          {
+            "productId": null,
+            "quantity": 2,
+            "unitPrice": 15.99
+          }
+        ]
+      },
+      "expectedStatus": 400,
+      "description": "Should fail validation when productId is null"
+    },
+    {
+      "name": "Get cart - valid user",
+      "endpoint": "GET /api/carts/user/{userId}",
+      "userId": 1,
+      "request": null,
+      "expectedStatus": 200,
+      "description": "Retrieve cart for an existing user"
+    },
+    {
+      "name": "Get cart - non-existent user",
+      "endpoint": "GET /api/carts/user/{userId}",
+      "userId": 999,
+      "request": null,
+      "expectedStatus": 404,
+      "description": "Should return 404 when user has no cart"
+    },
+    {
+      "name": "Add items to cart - valid request",
+      "endpoint": "POST /api/carts/{userId}/items",
+      "userId": 1,
+      "request": {
+        "items": [
+          {
+            "productId": 3,
+            "quantity": 3,
+            "unitPrice": 12.50
+          }
+        ]
+      },
+      "expectedStatus": 200,
+      "description": "Add new items to an existing cart"
+    },
+    {
+      "name": "Add items to cart - duplicate product",
+      "endpoint": "POST /api/carts/{userId}/items",
+      "userId": 1,
+      "request": {
+        "items": [
+          {
+            "productId": 1,
+            "quantity": 2,
+            "unitPrice": 15.99
+          }
+        ]
+      },
+      "expectedStatus": 200,
+      "description": "Add existing product should update quantity"
+    },
+    {
+      "name": "Add items to cart - non-existent cart",
+      "endpoint": "POST /api/carts/{userId}/items",
+      "userId": 999,
+      "request": {
+        "items": [
+          {
+            "productId": 1,
+            "quantity": 1,
+            "unitPrice": 15.99
+          }
+        ]
+      },
+      "expectedStatus": 404,
+      "description": "Should return 404 when cart doesn't exist"
+    },
+    {
+      "name": "Update cart - valid request",
+      "endpoint": "PUT /api/carts/{userId}",
+      "userId": 1,
+      "request": {
+        "items": [
+          {
+            "productId": 4,
+            "quantity": 1,
+            "unitPrice": 30.00
+          },
+          {
+            "productId": 5,
+            "quantity": 2,
+            "unitPrice": 20.00
+          }
+        ]
+      },
+      "expectedStatus": 200,
+      "description": "Replace all items in the cart with new items"
+    },
+    {
+      "name": "Update cart - empty cart",
+      "endpoint": "PUT /api/carts/{userId}",
+      "userId": 1,
+      "request": {
+        "items": []
+      },
+      "expectedStatus": 400,
+      "description": "Should fail validation when trying to update with empty items"
+    },
+    {
+      "name": "Update cart - non-existent cart",
+      "endpoint": "PUT /api/carts/{userId}",
+      "userId": 999,
+      "request": {
+        "items": [
+          {
+            "productId": 1,
+            "quantity": 1,
+            "unitPrice": 15.99
+          }
+        ]
+      },
+      "expectedStatus": 404,
+      "description": "Should return 404 when cart doesn't exist"
+    },
+    {
+      "name": "Remove item from cart - valid request",
+      "endpoint": "DELETE /api/carts/{userId}/items/{productId}",
+      "userId": 1,
+      "productId": 1,
+      "request": null,
+      "expectedStatus": 200,
+      "description": "Remove a specific product from the cart"
+    },
+    {
+      "name": "Remove item from cart - non-existent product",
+      "endpoint": "DELETE /api/carts/{userId}/items/{productId}",
+      "userId": 1,
+      "productId": 999,
+      "request": null,
+      "expectedStatus": 200,
+      "description": "Removing non-existent product should still return success (idempotent)"
+    },
+    {
+      "name": "Remove item from cart - non-existent cart",
+      "endpoint": "DELETE /api/carts/{userId}/items/{productId}",
+      "userId": 999,
+      "productId": 1,
+      "request": null,
+      "expectedStatus": 404,
+      "description": "Should return 404 when cart doesn't exist"
+    },
+    {
+      "name": "Clear cart - valid request",
+      "endpoint": "DELETE /api/carts/{userId}/clear",
+      "userId": 1,
+      "request": null,
+      "expectedStatus": 204,
+      "description": "Clear all items from the cart"
+    },
+    {
+      "name": "Clear cart - non-existent cart",
+      "endpoint": "DELETE /api/carts/{userId}/clear",
+      "userId": 999,
+      "request": null,
+      "expectedStatus": 404,
+      "description": "Should return 404 when cart doesn't exist"
+    },
+    {
+      "name": "Delete cart - valid request",
+      "endpoint": "DELETE /api/carts/{userId}",
+      "userId": 1,
+      "request": null,
+      "expectedStatus": 204,
+      "description": "Delete the entire cart"
+    },
+    {
+      "name": "Delete cart - non-existent cart",
+      "endpoint": "DELETE /api/carts/{userId}",
+      "userId": 999,
+      "request": null,
+      "expectedStatus": 404,
+      "description": "Should return 404 when cart doesn't exist"
+    },
+    {
+      "name": "Create cart - non-existent user",
+      "endpoint": "POST /api/carts/{userId}",
+      "userId": 999,
+      "request": {
+        "items": [
+          {
+            "productId": 1,
+            "quantity": 1,
+            "unitPrice": 15.99
+          }
+        ]
+      },
+      "expectedStatus": 404,
+      "description": "Should return 404 when user doesn't exist"
+    },
+    {
+      "name": "Create cart - non-existent product",
+      "endpoint": "POST /api/carts/{userId}",
+      "userId": 1,
+      "request": {
+        "items": [
+          {
+            "productId": 999,
+            "quantity": 1,
+            "unitPrice": 15.99
+          }
+        ]
+      },
+      "expectedStatus": 404,
+      "description": "Should return 404 when product doesn't exist"
+    }
+  ],
+  "sampleResponses": {
+    "cartResponse": {
+      "id": 1,
+      "userId": 1,
+      "items": [
+        {
+          "productId": 1,
+          "quantity": 2,
+          "unitPrice": 15.99
+        },
+        {
+          "productId": 2,
+          "quantity": 1,
+          "unitPrice": 25.50
+        }
+      ]
+    },
+    "errorResponse": {
+      "timestamp": "2024-01-01T12:00:00",
+      "status": 404,
+      "error": "Not Found",
+      "message": "Cart not found for user: 999",
+      "path": "/api/carts/user/999"
+    }
+  }
+}
+

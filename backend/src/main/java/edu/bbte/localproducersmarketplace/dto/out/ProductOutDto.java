@@ -13,5 +13,6 @@ public class ProductOutDto {
     public Double price;
     public Integer quantity;
     public CategoryOutDto category;
+    public UserOutDto producer;
     public List<ImageOutDto> images;
 }

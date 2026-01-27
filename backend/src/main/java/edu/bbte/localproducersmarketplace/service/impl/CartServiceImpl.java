@@ -75,8 +75,16 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public CartResponseDTO addItemToCart(Long userId, CartCreateDTO dto) {
+        // Get or create cart for user
         Cart cart = cartRepository.findByUserId(userId)
-                .orElseThrow(() -> new CartNotFoundException("Cart not found for user: " + userId));
+                .orElseGet(() -> {
+                    User user = userRepository.findById(userId)
+                            .orElseThrow(() -> new UserNotFoundException("User not found: " + userId));
+                    Cart newCart = new Cart();
+                    newCart.setUser(user);
+                    newCart.setItems(new ArrayList<>());
+                    return cartRepository.save(newCart);
+                });
 
         for (CartItemCreateDTO itemDTO : dto.getItems()) {
             Product product = productRepository.findById(itemDTO.getProductId())
@@ -109,8 +117,16 @@ public class CartServiceImpl implements CartService {
     @Override
     @Transactional
     public CartResponseDTO updateCart(Long userId, CartCreateDTO dto) {
+        // Get or create cart for user
         Cart cart = cartRepository.findByUserId(userId)
-                .orElseThrow(() -> new CartNotFoundException("Cart not found for user: " + userId));
+                .orElseGet(() -> {
+                    User user = userRepository.findById(userId)
+                            .orElseThrow(() -> new UserNotFoundException("User not found: " + userId));
+                    Cart newCart = new Cart();
+                    newCart.setUser(user);
+                    newCart.setItems(new ArrayList<>());
+                    return cartRepository.save(newCart);
+                });
 
         cart.getItems().clear();
 

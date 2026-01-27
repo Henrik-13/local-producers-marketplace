@@ -25,4 +25,6 @@ public interface OrderService {
     OrderResponseDTO updateOrder(Long orderId, OrderCreateDTO dto);
 
     OrderResponseDTO updateOrderConcat(Long orderId, OrderCreateDTO dto);
+
+    List<OrderResponseDTO> getOrdersByProducer(Long producerId);
 }

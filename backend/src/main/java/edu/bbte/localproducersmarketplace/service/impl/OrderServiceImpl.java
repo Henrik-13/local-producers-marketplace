@@ -161,4 +161,9 @@ public class OrderServiceImpl implements OrderService {
         return orderMapper.toResponse(saved);
     }
 
+    @Override
+    public List<OrderResponseDTO> getOrdersByProducer(Long producerId) {
+        return orderMapper.toResponseList(orderRepository.findByProducerId(producerId));
+    }
+
 }

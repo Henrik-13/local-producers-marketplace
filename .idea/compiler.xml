@@ -12,12 +12,18 @@
         <module name="localproducersmarketplace.main" />
       </profile>
     </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="localproducersmarketplace_main" target="21" />
+      <module name="localproducersmarketplace_test" target="21" />
+    </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="localproducersmarketplace" options="-parameters" />
       <module name="localproducersmarketplace.main" options="-parameters" />
       <module name="localproducersmarketplace.test" options="-parameters" />
+      <module name="localproducersmarketplace_main" options="-parameters" />
+      <module name="localproducersmarketplace_test" options="-parameters" />
     </option>
   </component>
 </project>
