@@ -104,6 +104,29 @@ public class OrderController {
         return orderService.updateStatus(orderId, statusUpdateDTO.getStatus());
     }
 
+    @PatchMapping("/{orderId}/cancel")
+    public OrderResponseDTO cancelOrder(@PathVariable Long orderId) {
+        // Allow customers to cancel their own orders
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        User currentUser = userDetailsService.loadUserByEmail(email);
+        
+        Order order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new OrderNotFoundException("Order not found: " + orderId));
+        
+        // Verify that the current user is the customer who placed this order
+        if (order.getCustomer().getId() != currentUser.getId()) {
+            throw new OrderNotFoundException("You can only cancel your own orders");
+        }
+        
+        // Only allow cancellation of PENDING or CONFIRMED orders
+        if (order.getStatus() != OrderStatus.PENDING && order.getStatus() != OrderStatus.CONFIRMED) {
+            throw new IllegalStateException("Only PENDING or CONFIRMED orders can be cancelled");
+        }
+        
+        return orderService.updateStatus(orderId, OrderStatus.CANCELED);
+    }
+
     @DeleteMapping("/{orderId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteOrder(@PathVariable Long orderId) {

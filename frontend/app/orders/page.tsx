@@ -13,6 +13,7 @@ export default function OrdersPage() {
   const [todoOrders, setTodoOrders] = useState<Order[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<string>('');
+  const [cancelingOrderId, setCancelingOrderId] = useState<number | null>(null);
 
   useEffect(() => {
     if (!isAuth) {
@@ -65,6 +66,28 @@ export default function OrdersPage() {
     }
   };
 
+  const handleCancelOrder = async (orderId: number) => {
+    if (!confirm('Are you sure you want to cancel this order? This action cannot be undone.')) {
+      return;
+    }
+
+    setCancelingOrderId(orderId);
+    try {
+      await apiClient.cancelOrder(orderId);
+      await loadOrders();
+    } catch (error: any) {
+      const errorMessage = error.response?.data?.message || error.message || 'Failed to cancel order';
+      alert(errorMessage);
+    } finally {
+      setCancelingOrderId(null);
+    }
+  };
+
+  const canCancelOrder = (status: OrderStatus): boolean => {
+    // Orders can only be cancelled if they are PENDING or CONFIRMED
+    return status === OrderStatus.PENDING || status === OrderStatus.CONFIRMED;
+  };
+
   const getStatusColor = (status: OrderStatus) => {
     switch (status) {
       case OrderStatus.PENDING:
@@ -97,6 +120,7 @@ export default function OrdersPage() {
 
   const renderOrderCard = (order: Order, showStatusUpdate: boolean = false) => {
     const nextStatus = showStatusUpdate ? getNextStatus(order.status) : null;
+    const canCancel = !showStatusUpdate && canCancelOrder(order.status);
     
     return (
       <div
@@ -124,6 +148,15 @@ export default function OrdersPage() {
                 className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 transition text-sm"
               >
                 Mark as {nextStatus}
+              </button>
+            )}
+            {canCancel && (
+              <button
+                onClick={() => handleCancelOrder(order.id)}
+                disabled={cancelingOrderId === order.id}
+                className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition text-sm disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                {cancelingOrderId === order.id ? 'Canceling...' : 'Cancel Order'}
               </button>
             )}
           </div>

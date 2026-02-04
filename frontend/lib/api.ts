@@ -215,6 +215,11 @@ class ApiClient {
     return response.data;
   }
 
+  async cancelOrder(orderId: number): Promise<any> {
+    const response = await this.client.patch(`/api/orders/${orderId}/cancel`);
+    return response.data;
+  }
+
   async getProducerOrders(producerId?: number): Promise<any[]> {
     if (producerId) {
       const response = await this.client.get(`/api/orders/producer/${producerId}`);
