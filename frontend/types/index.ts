@@ -111,14 +111,12 @@ export interface StatusUpdateDto {
 // Image Types
 export interface Image {
   id: number;
-  url: string;
-  filename: string;
+  name: string;
 }
 
 export interface ImageOutDto {
   id: number;
-  url: string;
-  filename: string;
+  name: string;
 }
 
 // Page Response Types

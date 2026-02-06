@@ -265,20 +265,19 @@ class ApiClient {
   }
 
   // Image API
-  async uploadImage(file: File): Promise<any> {
+  async uploadProductImage(
+    productId: number,
+    file: File,
+    name?: string
+  ): Promise<any> {
     const formData = new FormData();
     formData.append('file', file);
-    const response = await this.client.post('/images', formData, {
+    formData.append('name', name || file.name);
+
+    const response = await this.client.post(`/products/${productId}/images`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
-    });
-    return response.data;
-  }
-
-  async getImage(filename: string): Promise<Blob> {
-    const response = await this.client.get(`/images/${filename}`, {
-      responseType: 'blob',
     });
     return response.data;
   }

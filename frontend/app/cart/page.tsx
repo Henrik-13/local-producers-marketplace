@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/AuthContext';
 import { apiClient } from '@/lib/api';
 import Image from 'next/image';
 import Link from 'next/link';
+import { getImageUrl } from '@/lib/images';
 
 export default function CartPage() {
   const router = useRouter();
@@ -170,12 +171,14 @@ export default function CartPage() {
                     <>
                       <div className="relative w-full md:w-32 h-32 bg-gray-200 rounded overflow-hidden flex-shrink-0">
                         {product.images && product.images.length > 0 ? (
-                          <Image
-                            src={product.images[0].url}
+                          <img
+                            src={getImageUrl(product.images[0].name)}
                             alt={product.name}
-                            fill
-                            className="object-cover"
-                            sizes="128px"
+                            className="w-full h-full object-cover"
+                            onError={(e) => {
+                              const target = e.target as HTMLImageElement;
+                              target.style.display = 'none';
+                            }}
                           />
                         ) : (
                           <div className="flex items-center justify-center h-full text-gray-400 text-xs">

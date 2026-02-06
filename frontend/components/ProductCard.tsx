@@ -3,27 +3,32 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { Product } from '@/types';
+import { getImageUrl } from '@/lib/images';
 
 interface ProductCardProps {
   product: Product;
 }
 
 export default function ProductCard({ product }: ProductCardProps) {
-  const imageUrl = product.images && product.images.length > 0
-    ? product.images[0].url
-    : null;
+  const imageUrl =
+    product.images && product.images.length > 0 && product.images[0]?.name
+      ? getImageUrl(product.images[0].name)
+      : null;
 
   return (
     <Link href={`/products/${product.id}`}>
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow cursor-pointer">
-        <div className="relative h-48 w-full bg-gray-200 dark:bg-gray-700">
+        <div className="relative h-48 w-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
           {imageUrl ? (
-            <Image
+            <img
               src={imageUrl}
               alt={product.name}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+              className="w-full h-full object-cover"
+              onError={(e) => {
+                console.error('Image load error:', imageUrl);
+                const target = e.target as HTMLImageElement;
+                target.style.display = 'none';
+              }}
             />
           ) : (
             <div className="flex items-center justify-center h-full text-gray-400 dark:text-gray-500">
